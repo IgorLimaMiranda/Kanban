@@ -154,6 +154,15 @@ body {
     width: 8px;
 }
 
+.dragging {
+    opacity: 0.5;
+}
+
+.cards-hover {
+    background-color: #eaeffa;
+    border-radius: 8px;
+}
+
 *::-webkit-scrollbar-track {
     background-color: #eaeffa;
     border-radius: 8px;
