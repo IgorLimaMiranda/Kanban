@@ -31,6 +31,7 @@
 
 // #region jQuery
 $(function () {
+    // Isso é igual a $(document).ready(), mas mais curto
     $('.kanban-card').on('dragstart', function () {
         $(this).addClass('dragging');
     });
