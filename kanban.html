@@ -101,40 +101,118 @@
     <main>
         <div class="coluna">
             <h2>A Fazer</h2>
-            <div class="card">Revisar documento do projeto</div>
+            <!-- <div class="card">Revisar documento do projeto</div> -->
             <button class="add-btn">+ Adicionar</button>
         </div>
 
         <div class="coluna">
             <h2>Fazendo</h2>
-            <div class="card">Implementar layout responsivo</div>
+            <!-- <div class="card">Implementar layout responsivo</div> -->
             <button class="add-btn">+ Adicionar</button>
         </div>
 
         <div class="coluna">
             <h2>Feito</h2>
-            <div class="card">Criar repositório no GitHub</div>
+            <!-- <div class="card">Criar repositório no GitHub</div> -->
             <button class="add-btn">+ Adicionar</button>
         </div>
     </main>
 
     <script>
         $(function () {
+            $('.coluna').each(function () {
+                $(this).find('.card').remove(); // limpa os cards existentes
+            });
+            // Carregar cards salvos
+            if (localStorage.getItem('kanban')) {
+                const dados = JSON.parse(localStorage.getItem('kanban'));
+
+                // Limpa os cards existentes antes de recriar
+                $('.coluna').each(function () {
+                    $(this).find('.card').remove();
+                });
+
+                $('.coluna').each(function (index) {
+                    const $coluna = $(this);
+                    const cards = dados[index] || [];
+                    cards.forEach(texto => {
+                        const $card = criarCard(texto);
+                        $card.insertBefore($coluna.find('.add-btn'));
+                    });
+                });
+            }
+
+            // Adicionar novo card
             $('.add-btn').on('click', function () {
                 const $coluna = $(this).parent();
                 const $input = $('<input type="text" class="card-input" placeholder="Digite o conteúdo...">');
-                $input.insertBefore($(this));
-                $input.focus();
+                $input.insertBefore($(this)).focus();
 
                 $input.on('keypress', function (e) {
                     if (e.which === 13 && $(this).val().trim() !== '') {
                         const texto = $(this).val();
-                        const $novoCard = $('<div class="card"></div>').text(texto);
+                        const $novoCard = criarCard(texto);
                         $novoCard.insertBefore($(this));
                         $(this).remove();
+                        salvarCards();
                     }
                 });
             });
+
+            // Criar card com botão de apagar e edição
+            function criarCard(texto) {
+                const $card = $('<div class="card"></div>').text(texto);
+                const $deleteBtn = $('<button style="float:right;">🗑️</button>');
+                $card.append($deleteBtn);
+
+                // Editar com duplo clique
+                $card.on('dblclick', function () {
+                    const valorAtual = $(this).contents().filter(function () {
+                        return this.nodeType === 3;
+                    }).text().trim();
+
+                    const $input = $('<input type="text" class="card-input">').val(valorAtual);
+                    $(this).replaceWith($input);
+                    $input.focus();
+
+                    $input.on('keypress', function (e) {
+                        if (e.which === 13 && $(this).val().trim() !== '') {
+                            const novoTexto = $(this).val();
+                            const $novoCard = criarCard(novoTexto);
+                            $novoCard.insertBefore($(this));
+                            $(this).remove();
+                            salvarCards();
+                        }
+                    });
+                });
+
+                // Excluir card
+                $deleteBtn.on('click', function (e) {
+                    e.stopPropagation();
+                    $card.remove();
+                    salvarCards();
+                });
+
+                return $card;
+            }
+
+            // Salvar cards no localStorage
+            function salvarCards() {
+                const dados = [];
+                $('.coluna').each(function () {
+                    const cards = [];
+                    $(this).find('.card').each(function () {
+                        const texto = $(this).contents().filter(function () {
+                            return this.nodeType === 3;
+                        }).text().trim();
+                        if (texto !== '') {
+                            cards.push(texto);
+                        }
+                    });
+                    dados.push(cards);
+                });
+                localStorage.setItem('kanban', JSON.stringify(dados));
+            }
         });
     </script>
 </body>
