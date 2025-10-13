@@ -67,6 +67,13 @@
             background-color: #0056b3;
         }
 
+        .card-input {
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+        }
+
         @media (max-width: 600px) {
             main {
                 padding: 10px;
@@ -112,21 +119,21 @@
     </main>
 
     <script>
-        // document.querySelectorAll('.add-btn').forEach(button => {
-        //     button.addEventListener('click', () => {
-        //         const coluna = button.parentElement;
-        //         const novoCard = document.createElement('div');
-        //         novoCard.className = 'card';
-        //         novoCard.textContent = 'Novo card';
-        //         coluna.insertBefore(novoCard, button);
-        //     });
-        // });
-
         $(function () {
             $('.add-btn').on('click', function () {
                 const $coluna = $(this).parent();
-                const $novoCard = $('<div class="card">Novo card</div>');
-                $novoCard.insertBefore($(this));
+                const $input = $('<input type="text" class="card-input" placeholder="Digite o conteúdo...">');
+                $input.insertBefore($(this));
+                $input.focus();
+
+                $input.on('keypress', function (e) {
+                    if (e.which === 13 && $(this).val().trim() !== '') {
+                        const texto = $(this).val();
+                        const $novoCard = $('<div class="card"></div>').text(texto);
+                        $novoCard.insertBefore($(this));
+                        $(this).remove();
+                    }
+                });
             });
         });
     </script>
