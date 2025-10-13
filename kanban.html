@@ -1,0 +1,135 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://code.jquery.com/jquery-3.7.1.js"
+        integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+    <title>Kanban</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            overflow: hidden;
+        }
+
+        main {
+            display: flex;
+            flex-direction: row;
+            gap: 20px;
+            overflow-x: auto;
+            height: 100vh;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .coluna {
+            background-color: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            width: 250px;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            max-height: 100%;
+        }
+
+        h2 {
+            margin-top: 0;
+            color: #333;
+            flex-shrink: 0;
+        }
+
+        .card {
+            background-color: #eaeaea;
+            padding: 10px;
+            border-radius: 6px;
+            margin-bottom: 10px;
+            flex-shrink: 0;
+        }
+
+        .add-btn {
+            margin-top: auto;
+            padding: 8px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .add-btn:hover {
+            background-color: #0056b3;
+        }
+
+        @media (max-width: 600px) {
+            main {
+                padding: 10px;
+                gap: 10px;
+            }
+
+            .coluna {
+                width: 200px;
+                padding: 10px;
+            }
+
+            .card {
+                font-size: 14px;
+                padding: 8px;
+            }
+
+            h2 {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <main>
+        <div class="coluna">
+            <h2>A Fazer</h2>
+            <div class="card">Revisar documento do projeto</div>
+            <button class="add-btn">+ Adicionar</button>
+        </div>
+
+        <div class="coluna">
+            <h2>Fazendo</h2>
+            <div class="card">Implementar layout responsivo</div>
+            <button class="add-btn">+ Adicionar</button>
+        </div>
+
+        <div class="coluna">
+            <h2>Feito</h2>
+            <div class="card">Criar repositório no GitHub</div>
+            <button class="add-btn">+ Adicionar</button>
+        </div>
+    </main>
+
+    <script>
+        // document.querySelectorAll('.add-btn').forEach(button => {
+        //     button.addEventListener('click', () => {
+        //         const coluna = button.parentElement;
+        //         const novoCard = document.createElement('div');
+        //         novoCard.className = 'card';
+        //         novoCard.textContent = 'Novo card';
+        //         coluna.insertBefore(novoCard, button);
+        //     });
+        // });
+
+        $(function () {
+            $('.add-btn').on('click', function () {
+                const $coluna = $(this).parent();
+                const $novoCard = $('<div class="card">Novo card</div>');
+                $novoCard.insertBefore($(this));
+            });
+        });
+    </script>
+</body>
+
+</html>
